@@ -1,0 +1,12 @@
+# torch/torchvision are installed separately from the CPU index (see README)
+timm
+peft
+fastapi
+uvicorn
+python-multipart
+pillow
+numpy
+matplotlib
+sqlalchemy
+psycopg2-binary
+python-dotenv
