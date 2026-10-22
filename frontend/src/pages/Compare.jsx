@@ -15,6 +15,8 @@ const METRICS = [
   { k: "specificity", label: "Specificity", get: rep("specificity"), fmt: (v) => v.toFixed(2) + " %", group: "Operating point", best: "high" },
   { k: "latency_ms", label: "Latency (ms / image)", get: rep("latency_ms"), fmt: (v) => v.toFixed(2) + " ms", group: "Cost", best: "low" },
   { k: "fps", label: "Throughput (images / s)", get: rep("fps"), fmt: (v) => v.toFixed(2), group: "Cost", best: "high" },
+  { k: "epoch_s", label: "Training time per epoch", get: (m) => (m.training ? m.training.epoch_s : null), fmt: (v) => v.toFixed(0) + " s", group: "Cost", best: "low", note: "RETFound-based models only. Taken from the Kaggle T4 training logs (approximate). CNN training times were not recorded." },
+  { k: "total_min", label: "Total training time", get: (m) => (m.training ? m.training.total_min : null), fmt: (v) => v.toFixed(1) + " min", group: "Cost", best: "low", note: "RETFound-based models only. Taken from the Kaggle T4 training logs. CNN training times were not recorded." },
   { k: "trainable_m", label: "Trainable parameters (M)", get: (m) => m.trainable_m, fmt: (v) => v.toFixed(1) + " M", group: "Cost", best: "low" },
   { k: "params_m", label: "Total parameters (M)", get: (m) => m.params_m, fmt: (v) => v.toFixed(1) + " M", group: "Cost", best: "low" },
 ];
@@ -76,7 +78,7 @@ function RankBars({ rows, fmt, better }) {
           );
         })}
       </svg>
-      {missing.length > 0 && <p className="muted small">Not reported in the paper for this metric: {missing.map((m) => m.name).join(", ")}.</p>}
+      {missing.length > 0 && <p className="muted small">Not recorded for this metric: {missing.map((m) => m.name).join(", ")}.</p>}
       <Tip tip={tip} />
     </div>
   );
@@ -269,7 +271,7 @@ export default function Compare() {
           </div>
           <h3>{mdef.label}{mdef.scoped ? " on " + SCOPES.find((s) => s[0] === scopeNow)[1].toLowerCase() : ""} <small>({mdef.best === "low" ? "lower is better" : "higher is better"})</small></h3>
           <RankBars rows={rankRows} fmt={mdef.fmt} better={mdef.best} />
-          <p className="muted small">Bars start at zero. Accuracy, precision, recall, specificity, latency and size were only measured for the four transformer-based models.</p>
+          <p className="muted small">{mdef.note || "Bars start at zero. Accuracy, precision, recall, specificity, latency and size were only measured for the four transformer-based models."}</p>
           <DataTable cols={["Model", mdef.label]} rows={rankRows.map((r) => [r.name, r.value == null ? "not reported" : mdef.fmt(r.value)])} />
         </section>
       )}

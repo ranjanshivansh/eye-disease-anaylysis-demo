@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bars, GUIDE, MODEL_ORDER, Swatch, pct } from "../shared.jsx";
+import { Bars, GUIDE, MODEL_COLOR, MODEL_ORDER, Swatch, pct } from "../shared.jsx";
 
 const FAMILIES = ["CNN baseline", "Foundation model", "Fusion", "Ours"];
 
@@ -12,6 +12,8 @@ export default function Analyze({ last, setLast }) {
   const [drag, setDrag] = useState(false);
   const [zoom, setZoom] = useState(null);
   const [tab, setTab] = useState(null);
+  const [incImg, setIncImg] = useState(true);
+  const [repBusy, setRepBusy] = useState(false);
   const inp = useRef();
 
   useEffect(() => {
@@ -38,6 +40,19 @@ export default function Analyze({ last, setLast }) {
       setLast(d); setTab(d.models.find((m) => m.ok)?.id || null);
     } catch (e) { setErr(e.message); }
     setBusy(false);
+  }
+  async function report() {
+    if (!last) return;
+    setRepBusy(true); setErr("");
+    try {
+      const body = { original: last.original, filename: file ? file.name : "image", include_image: incImg, models: last.models.filter((m) => m.ok) };
+      const r = await fetch("/api/report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || "Server error " + r.status);
+      const url = URL.createObjectURL(await r.blob());
+      const a = document.createElement("a"); a.href = url; a.download = "retinal_report.pdf"; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (e) { setErr(e.message); }
+    setRepBusy(false);
   }
   function pick(f) { if (f) { setFile(f); run(f); } }
 
@@ -100,6 +115,12 @@ export default function Analyze({ last, setLast }) {
       {file && !busy && (
         <div className="btnrow">
           <button className="primary" onClick={() => run()}>Run the {sel.length} selected model{sel.length === 1 ? "" : "s"} again on {file.name}</button>
+          {last && okModels.length > 0 && (
+            <>
+              <button className="ghost" onClick={report} disabled={repBusy}>{repBusy ? "Preparing PDF..." : "Download report (PDF)"}</button>
+              <label className="inc"><input type="checkbox" checked={incImg} onChange={(e) => setIncImg(e.target.checked)} /> include the photo</label>
+            </>
+          )}
         </div>
       )}
 

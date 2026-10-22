@@ -206,3 +206,21 @@ tr.ours td { background: linear-gradient(90deg, var(--accent-soft), transparent)
 .hrow { border-left: 4px solid var(--c2); } .hrow:nth-child(3n+2) { border-left-color: var(--c3); } .hrow:nth-child(3n) { border-left-color: var(--c1); }
 .flow > div:nth-child(1) { border-top: 3px solid #eda100; } .flow > div:nth-child(3) { border-top: 3px solid #eb6834; } .flow > div:nth-child(5) { border-top: 3px solid #6250d6; } .flow > div:nth-child(7) { border-top: 3px solid #1baf7a; }
 a { color: var(--c2); }
+
+/* agreement meter + timing */
+.verdict { padding: 10px 14px; border-radius: 10px; font-size: 15px; margin-bottom: 14px; }
+.verdict.ok { background: var(--accent-soft); color: var(--accent); } .verdict.warn { background: var(--warn-bg); color: var(--warn-ink); font-weight: 600; }
+.meter { display: flex; flex-direction: column; gap: 12px; }
+.mrow { display: grid; grid-template-columns: 90px auto 1fr; align-items: center; gap: 14px; }
+.mname { font-family: var(--serif); font-size: 16px; font-weight: 600; }
+.dots { display: flex; gap: 7px; flex-wrap: wrap; }
+.dotm { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--c); background: transparent; }
+.dotm.on { background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 25%, transparent); }
+.mcount { font-size: 14px; color: var(--muted); } .mcount.split { color: var(--warn-ink); font-weight: 600; } .mcount.all { color: var(--hot); font-weight: 600; }
+.tbars { display: flex; flex-direction: column; gap: 10px; }
+.trow2 { display: grid; grid-template-columns: 190px 1fr 64px; align-items: center; gap: 12px; }
+.tname { display: flex; gap: 8px; align-items: center; font-size: 14px; } .ttrack { height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
+.tfill { height: 100%; border-radius: 7px; } .tval { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+@media (max-width: 640px) { .mrow { grid-template-columns: 70px 1fr; } .mcount { grid-column: 1 / 3; } .trow2 { grid-template-columns: 110px 1fr 52px; } }
+.btnrow .inc { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+.ghost:disabled { opacity: .6; cursor: wait; }

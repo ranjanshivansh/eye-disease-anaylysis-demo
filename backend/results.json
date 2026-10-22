@@ -196,6 +196,11 @@
     "latency_ms": 16.82,
     "fps": 59.47,
     "size_mb": 1157.02
+   },
+   "training": {
+    "epochs": 28,
+    "epoch_s": 230,
+    "total_min": 107.5
    }
   },
   {
@@ -249,6 +254,11 @@
     "latency_ms": 23.12,
     "fps": 43.25,
     "size_mb": 1252.93
+   },
+   "training": {
+    "epochs": 30,
+    "epoch_s": 270,
+    "total_min": 134.8
    }
   },
   {
@@ -302,6 +312,11 @@
     "latency_ms": 24.34,
     "fps": 41.08,
     "size_mb": 1277.09
+   },
+   "training": {
+    "epochs": 29,
+    "epoch_s": 282,
+    "total_min": 136.4
    }
   },
   {
@@ -340,6 +355,11 @@
     "latency_ms": 29.36,
     "fps": 34.05,
     "size_mb": 1283.16
+   },
+   "training": {
+    "epochs": 30,
+    "epoch_s": 180,
+    "total_min": 89.5
    }
   }
  ],
@@ -398,5 +418,6 @@
   "No external test set: results do not show generalisation to new hospitals or cameras.",
   "Only 2c produces Grad-CAM maps; they are qualitative and need clinician verification.",
   "Research prototype, not a medical device."
- ]
+ ],
+ "training_note": "Taken from the Kaggle T4 training logs (approximate per-epoch times). Training times were not recorded for the CNN baselines."
 }

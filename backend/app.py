@@ -2,7 +2,8 @@ import io, os, json, time, base64
 import numpy as np
 from PIL import Image
 from fastapi import FastAPI, File, Form, UploadFile, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
+from fastapi import Request
 from fastapi.staticfiles import StaticFiles
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -84,6 +85,17 @@ def _row(r):
                                                     "flags": json.loads(r.flags), "thresholds": [0.5] * 5, "seconds": r.seconds}]
     return {"id": r.id, "created_at": r.created_at.isoformat() + "Z", "filename": r.filename, "thumb": r.thumb,
             "seconds": r.seconds, "classes": CLASSES, "models": models}
+
+
+@app.post("/api/report")
+async def report(request: Request):
+    """Builds a one-page PDF from the result the page is showing (only the models that were run)."""
+    import report as rep
+    try:
+        pdf = rep.build(await request.json())
+    except Exception as e:
+        raise HTTPException(400, f"Could not build the report: {e}")
+    return Response(pdf, media_type="application/pdf", headers={"Content-Disposition": 'attachment; filename="retinal_report.pdf"'})
 
 
 @app.get("/api/history")
